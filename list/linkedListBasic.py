@@ -98,10 +98,18 @@ class LinkedList():
     def size(self):
         return self.__numItems
     
+    def isEmpty(self):
+        if self.__numItems == 0: return 1
+
     def clear(self):
         self.__head = ListNode("dummy", None)
         self.__numItems = 0
         self.tail = None
+
+    def inNode(self,x):
+        for element in self:
+            if element == x:
+                return 1
 
     def count(self, x):
         cnt = 0
