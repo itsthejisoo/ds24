@@ -1,13 +1,12 @@
 from listNode import ListNode
 
-
 class CircularLinkedList:
 	def __init__(self):
 		self.__tail = ListNode("dummy", None)
 		self.__tail.next = self.__tail
 		self.__numItems = 0
 
-	def insert(self, i: int, newItem) -> None:
+	def insert(self, i: int, newItem):
 		if (i >= 0 and i <= self.__numItems):
 			prev = self.getNode(i - 1)
 			newNode = ListNode(newItem, prev.next)
@@ -18,7 +17,7 @@ class CircularLinkedList:
 		else:
 			print("index", i, ": out of boundary")
 
-	def append(self, newItem) -> None:
+	def append(self, newItem):
 		newNode = ListNode(newItem, self.__tail.next)
 		self.__tail.next = newNode
 		self.__tail = newNode
@@ -70,7 +69,7 @@ class CircularLinkedList:
 		else:
 			return "Out of bound"
 
-	def index(self, x) -> int:
+	def index(self, x):
 		cnt = 0
 		for element in self:
 			if element == x:
@@ -78,7 +77,7 @@ class CircularLinkedList:
 			cnt += 1
 		return -2
 
-	def size(self) -> int:
+	def size(self):
 		return self.__numItems
 
 	def clear(self):
@@ -103,7 +102,7 @@ class CircularLinkedList:
 			a.append(element)
 		return a
 
-	def reverse(self) -> None:
+	def reverse(self):
 		__head = self.__tail.next 
 		prev = __head
 		curr = prev.next
@@ -116,7 +115,7 @@ class CircularLinkedList:
 			next = next.next
 			curr.next = prev
 
-	def sort(self) -> None:
+	def sort(self):
 		a = []
 		for element in self:
 			a.append(element)
@@ -136,7 +135,7 @@ class CircularLinkedList:
 				curr = curr.next
 		return (None, None)
 
-	def getNode(self, i: int) -> ListNode:
+	def getNode(self, i: int):
 		curr = self.__tail.next
 		for index in range(i+1):
 			curr = curr.next
