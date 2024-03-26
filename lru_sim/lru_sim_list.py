@@ -1,5 +1,4 @@
 from list.linkedListBasic import *
-# 오래 걸리는데 돌아가긴 해요ㅠㅠ..
 
 class CacheSimulator:
 	def __init__(self, cache_slots):
