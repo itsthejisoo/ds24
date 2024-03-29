@@ -130,26 +130,18 @@ void doSim(CacheSimulator *cacheSim, char *page)
     }
     else
     {
-        if (cacheSim->lists->numItems >= cacheSim->cache_slots)
+        if (inNode(cacheSim->lists, page))
         {
-            if (inNode(cacheSim->lists, page))
-            {
-                removeNode(cacheSim->lists, findindex(cacheSim->lists, page));
-                cacheSim->cache_hit++;
-            }
-            else
-            {
-                removeNode(cacheSim->lists, 0);
-            }
-            append(cacheSim->lists, page);
+            removeNode(cacheSim->lists, findindex(cacheSim->lists, page));
+            append(cacheSim->lists,page);
+            cacheSim->cache_hit++;
             cacheSim->tot_cnt++;
         }
         else
         {
-            if (inNode(cacheSim->lists, page))
+            if(cacheSim->lists->numItems >= cacheSim->cache_slots)
             {
-                removeNode(cacheSim->lists, findindex(cacheSim->lists, page));
-                cacheSim->cache_hit++;
+                removeNode(cacheSim->lists, 0);
             }
             append(cacheSim->lists, page);
             cacheSim->tot_cnt++;
