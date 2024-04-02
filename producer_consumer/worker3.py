@@ -51,8 +51,6 @@ class Consumer:
                     if highest_priority:
                         self.boarding_cus.remove(highest_priority)
                         print("Boarding:", highest_priority[1])
-                        print(self.boarding_cus)
-
                     else:
                         next_customer = self.boarding_cus.pop(0)
                         print("Boarding:", next_customer[1])
