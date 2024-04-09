@@ -62,7 +62,7 @@ if __name__ == "__main__":
     customers = ListQueue()  # 우선순위 큐 생성
     boarding_customer = ListQueue()
 
-    with open("/Users/jisoo/ds24/ds24/producer_consumer/customer.txt", 'r') as file:
+    with open("./customer.txt", 'r') as file:
         lines = file.readlines()
         for line in lines:
             customer = line.split()
