@@ -42,6 +42,12 @@ class Min_Heap:
 				n.frequency = node.frequency
 				self.__percolateDown(i)
 
+	def inHeap(self, n):
+		for i in self.__A:
+			if i.lpn == n:
+				return True
+		return False
+
 	def min(self):
 		return self.__A[0]
 
@@ -78,7 +84,7 @@ def lfu_sim(cache_slots):
 		lpn = line.split()[0] # 각 라인 출력
 		tot_cnt += 1
 
-		if lpn in cache:  # cache[lpn] : frequency
+		if heap.inHeap(lpn):  # cache[lpn] : frequency
 			cache[lpn] += 1
 			cache_hit += 1
 			node = LFU_Node(lpn, cache[lpn])
@@ -86,8 +92,7 @@ def lfu_sim(cache_slots):
 			heap.updateheap(node)
 		else:
 			if len(cache) >= cache_slots:
-				min_node = heap.deleteMin()
-				del cache[min_node.lpn]
+				heap.deleteMin()
 			cache[lpn] = 1
 			new_node = LFU_Node(lpn, cache[lpn])
 			heap.insert(new_node)
