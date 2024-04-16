@@ -88,6 +88,7 @@ def lfu_sim(cache_slots):
 			cache[lpn] += 1
 			cache_hit += 1
 			node = LFU_Node(lpn, cache[lpn])
+			# 새로 만들지말고 기존의 노드를 새로 업데이트 해보셈
 			heap.updateheap(node)
 		else:
 			if len(cache) >= cache_slots:

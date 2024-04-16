@@ -2,6 +2,7 @@ from shellSort import *
 from insertionSort import *
 from quickSort import *
 from quickevenSort import *
+from quickrandom import *
 
 def do_sort(input_file):
     data_file = open(input_file)
@@ -18,7 +19,8 @@ def do_sort(input_file):
     # shellSort_1(A)
     # insertionSort(A)
     # quickSort(A, 0, len(A)-1)
-    quickEvenSort(A, 0, len(A)-1)
+    # quickEvenSort(A, 0, len(A)-1)
+    quickrandom(A, 0, len(A)-1)
 
     for i in range(1000, 1010, 1):
         print(A[i], end=' ')
