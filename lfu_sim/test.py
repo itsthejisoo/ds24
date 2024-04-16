@@ -1,4 +1,3 @@
-import time
 import math
 
 class Min_Heap:
@@ -37,17 +36,12 @@ class Min_Heap:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
 
-	def findIndex(self, node):
+	def updateheap(self, lpn):
 		for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
-			if n.lpn == node.lpn:
-				return i
-		return None
-
-	def updateheap(self, node):
-		idx = self.findIndex(node)
-		if idx is not None:
-			self.__A[idx] = node
-			self.__percolateDown(idx)
+			if n.lpn == lpn:
+				n.frequency += 1
+				self.__percolateDown(i)
+				break
 
 	def min(self):
 		return self.__A[0]
@@ -72,7 +66,7 @@ class Min_Heap:
 			i = 2 ** (k - 1)
 			for i in range(len(self.__A)):
 				if i <= (2 ** k) - 2:
-					print(self.__A[i].lpn, self.__A[i].frequency, end=' ')
+					print(self.__A[i].lpn, self.__A[i].frequency, self.__A[i].last_used, end=' / ')
 					i += 1
 				if i == 2 ** k - 1:
 					print('\n')
@@ -85,11 +79,11 @@ class LFU_Node:
 	def __init__(self, lpn, frequency:int):
 		self.lpn = lpn
 		self.frequency = frequency
-		self.time = time.time()
+		self.last_used = 0
 
 	def __lt__(self, other):
 		if self.frequency == other.frequency:
-			return self.time < other.time # 빈도수가 같을 때, 오래 있었던 원소가 우선순위를 가질 수 있도록
+			return self.last_used < other.last_used
 		return self.frequency < other.frequency
 
 def lfu_sim(cache_slots):
@@ -107,19 +101,19 @@ def lfu_sim(cache_slots):
 		if lpn in cache:  # cache[lpn] : frequency
 			cache[lpn] += 1
 			cache_hit += 1
-			node = LFU_Node(lpn, cache[lpn])
-			heap.updateheap(node)
+			heap.updateheap(lpn)
 			heap.heapPrint()
 		else:
-			if len(cache) >= cache_slots:
+			if heap.size() >= cache_slots:
 				min_node = heap.deleteMin()
 				del cache[min_node.lpn]
 			cache[lpn] = 1
 			new_node = LFU_Node(lpn, 1)
+			new_node.last_used = tot_cnt
 			heap.insert(new_node)
 			heap.heapPrint()
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)
 	
 if __name__ == "__main__":
-	lfu_sim(10)
+	lfu_sim(3)

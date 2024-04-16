@@ -1,5 +1,3 @@
-import time
-
 class Min_Heap:
 	def __init__(self, *args):
 		if len(args) != 0:
@@ -35,18 +33,13 @@ class Min_Heap:
 			if self.__A[i] > self.__A[child]:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
-
-	def updateheap(self, node):
+ 
+	def updateheap(self, lpn):
 		for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
-			if n.lpn == node.lpn:
-				n.frequency = node.frequency
+			if n.lpn == lpn:
+				n.frequency += 1
 				self.__percolateDown(i)
-
-	def inHeap(self, n):
-		for i in self.__A:
-			if i.lpn == n:
-				return True
-		return False
+				break
 
 	def min(self):
 		return self.__A[0]
@@ -54,28 +47,26 @@ class Min_Heap:
 	def isEmpty(self) -> bool:
 		return len(self.__A) == 0
 
-	def clear(self):
-		self.__A = []
-
 	def size(self) -> int:
 		return len(self.__A)
 
 # lpn과 frequency를 모두 저장하는 class
 class LFU_Node:
-	def __init__(self, lpn, frequency):
+	def __init__(self, lpn, frequency:int):
 		self.lpn = lpn
 		self.frequency = frequency
-		self.time = time.time()
+		self.point = 0 # 몇번째에 들어가는지 저장
 
 	def __lt__(self, other):
-		if self.frequency == other.frequency: # 빈도수가 같을 때, 오래 있었던 원소가 우선순위를 가질 수 있도록
-			return self.time < other.time
+		if self.frequency == other.frequency: # 빈도수가 같을 때, 오래된 원소에게 더 높은 우선순위를 준다.
+			return self.point < other.point
 		return self.frequency < other.frequency
 
 def lfu_sim(cache_slots):
 	cache_hit = 0
 	tot_cnt = 0
 	cache = {}
+	storage = {} # cache와 상관없이 frequency 저장하는 딕셔너리
 	heap = Min_Heap()
 
 	data_file = open("lfu_sim/linkbench.trc")
@@ -84,17 +75,17 @@ def lfu_sim(cache_slots):
 		lpn = line.split()[0] # 각 라인 출력
 		tot_cnt += 1
 
-		if heap.inHeap(lpn):  # cache[lpn] : frequency
-			cache[lpn] += 1
+		if lpn in cache:  # cache[lpn] : frequency
+			cache[lpn] += 1; storage[lpn] += 1
 			cache_hit += 1
-			node = LFU_Node(lpn, cache[lpn])
-			# 새로 만들지말고 기존의 노드를 새로 업데이트 해보셈 - 했는데..?
-			heap.updateheap(node)
+			heap.updateheap(lpn)
 		else:
-			if len(cache) >= cache_slots:
-				heap.deleteMin()
-			cache[lpn] = 1
-			new_node = LFU_Node(lpn, cache[lpn])
+			if heap.size() >= cache_slots:
+				min_node = heap.deleteMin()
+				del cache[min_node.lpn]
+			cache[lpn] = 1; storage[lpn] = 1
+			new_node = LFU_Node(lpn, 1)
+			new_node.point = tot_cnt
 			heap.insert(new_node)
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)
