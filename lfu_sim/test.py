@@ -36,10 +36,11 @@ class Min_Heap:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
 
-	def updateheap(self, lpn):
+	def updateheap(self, lpn, tot_cnt):
 		for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
 			if n.lpn == lpn:
 				n.frequency += 1
+				n.last_used = tot_cnt
 				self.__percolateDown(i)
 				break
 
@@ -101,7 +102,7 @@ def lfu_sim(cache_slots):
 		if lpn in cache:  # cache[lpn] : frequency
 			cache[lpn] += 1
 			cache_hit += 1
-			heap.updateheap(lpn)
+			heap.updateheap(lpn, tot_cnt)
 			heap.heapPrint()
 		else:
 			if heap.size() >= cache_slots:

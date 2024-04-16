@@ -27,8 +27,8 @@ class Min_Heap:
 	def __percolateDown(self, i:int):
 		child = 2 * i + 1  # left child
 		right = 2 * i + 2  # right child
-		if (child <= len(self.__A)-1):
-			if (right <= len(self.__A)-1 and self.__A[right] < self.__A[child]):
+		if (child < len(self.__A)):
+			if (right < len(self.__A) and self.__A[right] < self.__A[child]):
 				child = right
 			if self.__A[i] > self.__A[child]:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
