@@ -30,7 +30,7 @@ class CacheSimulator:
 
 if __name__ == "__main__":
 
-    data_file = open("./linkbench.trc")
+    data_file = open("lru_sim/linkbench.trc")
     lines = data_file.readlines()
     for cache_slots in range(100, 1001, 100):
         cache_sim = CacheSimulator(cache_slots)

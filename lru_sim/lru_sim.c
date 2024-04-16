@@ -156,7 +156,7 @@ void printStats(CacheSimulator *cacheSim)
 
 int main()
 {
-    FILE *data_file = fopen("linkbench.trc", "r");
+    FILE *data_file = fopen("lru_sim/linkbench.trc", "r");
     char line[1000];
     LinkedList *lines = newLinkedList();
 

@@ -36,17 +36,11 @@ class Min_Heap:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
 
-	def findIndex(self, node):
+	def updateheap(self, node):
 		for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
 			if n.lpn == node.lpn:
-				return i
-		return None
-
-	def updateheap(self, node):
-		idx = self.findIndex(node)
-		if idx is not None:
-			self.__A[idx] = node
-			self.__percolateDown(idx)
+				n.frequency = node.frequency
+				self.__percolateDown(i)
 
 	def min(self):
 		return self.__A[0]
@@ -62,14 +56,14 @@ class Min_Heap:
 
 # lpn과 frequency를 모두 저장하는 class
 class LFU_Node:
-	def __init__(self, lpn, frequency:int):
+	def __init__(self, lpn, frequency):
 		self.lpn = lpn
 		self.frequency = frequency
 		self.time = time.time()
 
 	def __lt__(self, other):
-		if self.frequency == other.frequency:
-			return self.time < other.time # 빈도수가 같을 때, 오래 있었던 원소가 우선순위를 가질 수 있도록
+		if self.frequency == other.frequency: # 빈도수가 같을 때, 오래 있었던 원소가 우선순위를 가질 수 있도록
+			return self.time < other.time
 		return self.frequency < other.frequency
 
 def lfu_sim(cache_slots):
@@ -78,7 +72,7 @@ def lfu_sim(cache_slots):
 	cache = {}
 	heap = Min_Heap()
 
-	data_file = open("/Users/jisoo/ds24/ds24/lfu_sim/linkbench.trc")
+	data_file = open("lfu_sim/linkbench.trc")
 	
 	for line in data_file.readlines():
 		lpn = line.split()[0] # 각 라인 출력
@@ -88,14 +82,14 @@ def lfu_sim(cache_slots):
 			cache[lpn] += 1
 			cache_hit += 1
 			node = LFU_Node(lpn, cache[lpn])
-			# 새로 만들지말고 기존의 노드를 새로 업데이트 해보셈
+			# 새로 만들지말고 기존의 노드를 새로 업데이트 해보셈 - 했는데..?
 			heap.updateheap(node)
 		else:
 			if len(cache) >= cache_slots:
 				min_node = heap.deleteMin()
 				del cache[min_node.lpn]
 			cache[lpn] = 1
-			new_node = LFU_Node(lpn, 1)
+			new_node = LFU_Node(lpn, cache[lpn])
 			heap.insert(new_node)
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)

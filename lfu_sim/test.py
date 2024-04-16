@@ -1,4 +1,5 @@
 import time
+import math
 
 class Min_Heap:
 	def __init__(self, *args):
@@ -60,6 +61,25 @@ class Min_Heap:
 	def size(self) -> int:
 		return len(self.__A)
 
+	def height(self):
+		return math.log2(self.size() + 1)
+	
+	def heapPrint(self):
+		if self.isEmpty():
+			print("Nothing in Heap\n")
+		k = 1
+		while k <= self.height():
+			i = 2 ** (k - 1)
+			for i in range(len(self.__A)):
+				if i <= (2 ** k) - 2:
+					print(self.__A[i].lpn, self.__A[i].frequency, end=' ')
+					i += 1
+				if i == 2 ** k - 1:
+					print('\n')
+					k += 1
+		print('\n=========================')
+
+
 # lpn과 frequency를 모두 저장하는 class
 class LFU_Node:
 	def __init__(self, lpn, frequency:int):
@@ -78,7 +98,7 @@ def lfu_sim(cache_slots):
 	cache = {}
 	heap = Min_Heap()
 
-	data_file = open("/Users/jisoo/ds24/ds24/lfu_sim/linkbench1.trc")
+	data_file = open("lfu_sim/linkbench_test.trc")
 	
 	for line in data_file.readlines():
 		lpn = line.split()[0] # 각 라인 출력
@@ -89,6 +109,7 @@ def lfu_sim(cache_slots):
 			cache_hit += 1
 			node = LFU_Node(lpn, cache[lpn])
 			heap.updateheap(node)
+			heap.heapPrint()
 		else:
 			if len(cache) >= cache_slots:
 				min_node = heap.deleteMin()
@@ -96,6 +117,7 @@ def lfu_sim(cache_slots):
 			cache[lpn] = 1
 			new_node = LFU_Node(lpn, 1)
 			heap.insert(new_node)
+			heap.heapPrint()
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)
 	
