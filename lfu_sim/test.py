@@ -1,5 +1,3 @@
-import math
-
 class Min_Heap:
 	def __init__(self, *args):
 		if len(args) != 0:
@@ -29,20 +27,27 @@ class Min_Heap:
 	def __percolateDown(self, i:int):
 		child = 2 * i + 1  # left child
 		right = 2 * i + 2  # right child
-		if (child <= len(self.__A)-1):
-			if (right <= len(self.__A)-1 and self.__A[right] < self.__A[child]):
+		if (child < len(self.__A)):
+			if (right < len(self.__A) and self.__A[right] < self.__A[child]):
 				child = right
 			if self.__A[i] > self.__A[child]:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
-
-	def updateheap(self, lpn, tot_cnt):
-		for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
+	
+	def inHeap(self, lpn):
+		for i, n in enumerate(self.__A):
 			if n.lpn == lpn:
-				n.frequency += 1
-				n.last_used = tot_cnt
-				self.__percolateDown(i)
-				break
+				return True
+
+	def findIndex(self, lpn) -> int:
+		for i, n in enumerate(self.__A):
+			if n.lpn == lpn:
+				return i
+
+	def updateheap(self, i):
+		if i >= 0:
+			self.__A[i].frequency += 1
+			self.__percolateDown(i)
 
 	def min(self):
 		return self.__A[0]
@@ -50,71 +55,50 @@ class Min_Heap:
 	def isEmpty(self) -> bool:
 		return len(self.__A) == 0
 
-	def clear(self):
-		self.__A = []
-
 	def size(self) -> int:
 		return len(self.__A)
 
-	def height(self):
-		return math.log2(self.size() + 1)
-	
-	def heapPrint(self):
-		if self.isEmpty():
-			print("Nothing in Heap\n")
-		k = 1
-		while k <= self.height():
-			i = 2 ** (k - 1)
-			for i in range(len(self.__A)):
-				if i <= (2 ** k) - 2:
-					print(self.__A[i].lpn, self.__A[i].frequency, self.__A[i].last_used, end=' / ')
-					i += 1
-				if i == 2 ** k - 1:
-					print('\n')
-					k += 1
-		print('\n=========================')
-
-
-# lpn과 frequency를 모두 저장하는 class
 class LFU_Node:
-	def __init__(self, lpn, frequency:int):
+	def __init__(self, lpn, frequency):
 		self.lpn = lpn
 		self.frequency = frequency
-		self.last_used = 0
-
+		self.point = 0
+	
 	def __lt__(self, other):
 		if self.frequency == other.frequency:
-			return self.last_used < other.last_used
+			return self.point < other.point
 		return self.frequency < other.frequency
-
+	
 def lfu_sim(cache_slots):
 	cache_hit = 0
 	tot_cnt = 0
+	cache_heap = Min_Heap()
 	cache = {}
-	heap = Min_Heap()
 
-	data_file = open("lfu_sim/linkbench_test.trc")
-	
+	data_file = open("lfu_sim/linkbench.trc")
+
 	for line in data_file.readlines():
-		lpn = line.split()[0] # 각 라인 출력
+		lpn = line.split()[0]
 		tot_cnt += 1
 
-		if lpn in cache:  # cache[lpn] : frequency
+		if not cache_heap.inHeap(lpn):
+			if cache_heap.size() == cache_slots:
+				cache_heap.deleteMin()
+			if lpn in cache:
+				cache[lpn] += 1
+			else:
+				cache[lpn] = 1
+			newnode = LFU_Node(lpn, 1)
+			newnode.point = tot_cnt
+			cache_heap.insert(newnode)
+		else:
 			cache[lpn] += 1
 			cache_hit += 1
-			heap.updateheap(lpn, tot_cnt)
-			heap.heapPrint()
-		else:
-			if heap.size() >= cache_slots:
-				min_node = heap.deleteMin()
-				del cache[min_node.lpn]
-			cache[lpn] = 1
-			new_node = LFU_Node(lpn, 1)
-			new_node.last_used = tot_cnt
-			heap.insert(new_node)
-			heap.heapPrint()
+			i = cache_heap.findIndex(lpn)
+			cache_heap.updateheap(i)
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)
-	
+
 if __name__ == "__main__":
-	lfu_sim(3)
+	for cache_slots in range(100, 1000, 100):
+		lfu_sim(cache_slots)

@@ -80,7 +80,7 @@ def lfu_sim(cache_slots):
 			cache_hit += 1
 			heap.updateheap(lpn)
 		else:
-			if heap.size() >= cache_slots:
+			if heap.size() == cache_slots:
 				min_node = heap.deleteMin()
 				del cache[min_node.lpn]
 			cache[lpn] = 1; storage[lpn] = 1
