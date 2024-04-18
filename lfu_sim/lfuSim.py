@@ -33,13 +33,28 @@ class Min_Heap:
 			if self.__A[i] > self.__A[child]:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
- 
-	def updateheap(self, lpn):
-		for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
+	
+	def inHeap(self, lpn) -> bool:
+		for i, n in enumerate(self.__A):
 			if n.lpn == lpn:
-				n.frequency += 1
-				self.__percolateDown(i)
-				break
+				return True
+
+	def findIndex(self, lpn) -> int:
+		for i, n in enumerate(self.__A):
+			if n.lpn == lpn:
+				return i
+
+	def updateheap(self, i):
+		if i >= 0:
+			self.__A[i].frequency += 1
+			self.__percolateDown(i)
+
+	# def updateheap(self, lpn):
+	# 	for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
+	# 		if n.lpn == lpn:
+	# 			n.frequency += 1
+	# 			self.__percolateDown(i)
+	# 			break
 
 	def min(self):
 		return self.__A[0]
@@ -66,7 +81,6 @@ def lfu_sim(cache_slots):
 	cache_hit = 0
 	tot_cnt = 0
 	cache = {}
-	storage = {} # cache와 상관없이 frequency 저장하는 딕셔너리
 	heap = Min_Heap()
 
 	data_file = open("lfu_sim/linkbench.trc")
@@ -75,18 +89,21 @@ def lfu_sim(cache_slots):
 		lpn = line.split()[0] # 각 라인 출력
 		tot_cnt += 1
 
-		if lpn in cache:  # cache[lpn] : frequency
-			cache[lpn] += 1; storage[lpn] += 1
-			cache_hit += 1
-			heap.updateheap(lpn)
-		else:
+		if not heap.inHeap(lpn):
 			if heap.size() == cache_slots:
-				min_node = heap.deleteMin()
-				del cache[min_node.lpn]
-			cache[lpn] = 1; storage[lpn] = 1
-			new_node = LFU_Node(lpn, 1)
-			new_node.point = tot_cnt
-			heap.insert(new_node)
+				heap.deleteMin()
+			if lpn in cache:
+				cache[lpn] += 1
+			else:
+				cache[lpn] = 1
+			newnode = LFU_Node(lpn, 1)
+			newnode.point = tot_cnt
+			heap.insert(newnode)
+		else:
+			cache[lpn] += 1
+			cache_hit += 1
+			i = heap.findIndex(lpn)
+			heap.updateheap(i)
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)
 	
