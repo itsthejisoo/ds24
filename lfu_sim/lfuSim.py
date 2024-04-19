@@ -33,28 +33,18 @@ class Min_Heap:
 			if self.__A[i] > self.__A[child]:
 				self.__A[i], self.__A[child] = self.__A[child], self.__A[i]
 				self.__percolateDown(child)
-	
-	def inHeap(self, lpn) -> bool:
-		for i, n in enumerate(self.__A):
-			if n.lpn == lpn:
-				return True
 
 	def findIndex(self, lpn) -> int:
 		for i, n in enumerate(self.__A):
 			if n.lpn == lpn:
 				return i
+		return False
 
-	def updateheap(self, i):
+	def updateheap(self, i:int, point:int):
 		if i >= 0:
 			self.__A[i].frequency += 1
+			self.__A[i].point = point
 			self.__percolateDown(i)
-
-	# def updateheap(self, lpn):
-	# 	for i, n in enumerate(self.__A): # 인덱스와 원소 동시 접근
-	# 		if n.lpn == lpn:
-	# 			n.frequency += 1
-	# 			self.__percolateDown(i)
-	# 			break
 
 	def min(self):
 		return self.__A[0]
@@ -65,48 +55,48 @@ class Min_Heap:
 	def size(self) -> int:
 		return len(self.__A)
 
-# lpn과 frequency를 모두 저장하는 class
+# lpn과 frequency 모두 저장하는 클래스
 class LFU_Node:
-	def __init__(self, lpn, frequency:int):
+	def __init__(self, lpn, frequency):
 		self.lpn = lpn
 		self.frequency = frequency
-		self.point = 0 # 몇번째에 들어가는지 저장
-
+		self.point = 0
+	
 	def __lt__(self, other):
-		if self.frequency == other.frequency: # 빈도수가 같을 때, 오래된 원소에게 더 높은 우선순위를 준다.
+		if self.frequency == other.frequency:	# 빈도수가 같을 때, 먼저 들어온 원소에게 높은 우선순위 줌
 			return self.point < other.point
 		return self.frequency < other.frequency
-
+	
 def lfu_sim(cache_slots):
 	cache_hit = 0
 	tot_cnt = 0
+	cache_heap = Min_Heap()
 	cache = {}
-	heap = Min_Heap()
 
 	data_file = open("lfu_sim/linkbench.trc")
-	
+
 	for line in data_file.readlines():
-		lpn = line.split()[0] # 각 라인 출력
+		lpn = line.split()[0]					# 한 줄씩 원소를 불러옴
 		tot_cnt += 1
 
-		if not heap.inHeap(lpn):
-			if heap.size() == cache_slots:
-				heap.deleteMin()
-			if lpn in cache:
+		if cache_heap.findIndex(lpn) is False:		# cache힙에 없을때
+			if cache_heap.size() == cache_slots:	# cache가 가득 찼을 때, 빈도수가 작은 원소를 삭제시킴
+				cache_heap.deleteMin()
+			if lpn in cache:					# 캐시 삭제와 상관없이 frequency 저장
 				cache[lpn] += 1
 			else:
 				cache[lpn] = 1
 			newnode = LFU_Node(lpn, 1)
-			newnode.point = tot_cnt
-			heap.insert(newnode)
-		else:
+			newnode.point = tot_cnt				# 언제 들어왔는지
+			cache_heap.insert(newnode)
+		else:									# cache안에 lpn이 있을때(hit)
 			cache[lpn] += 1
 			cache_hit += 1
-			i = heap.findIndex(lpn)
-			heap.updateheap(i)
+			i = cache_heap.findIndex(lpn)
+			cache_heap.updateheap(i, tot_cnt)	# frequency, point 업데이트
 
 	print("cache_slot = ", cache_slots, "cache_hit = ", cache_hit, "hit ratio = ", cache_hit / tot_cnt)
-	
+
 if __name__ == "__main__":
 	for cache_slots in range(100, 1000, 100):
 		lfu_sim(cache_slots)
