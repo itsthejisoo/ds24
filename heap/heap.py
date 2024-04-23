@@ -29,7 +29,7 @@ class Heap:
 	def __percolateDown(self, i:int):
 		child = 2 * i + 1  # left child
 		right = 2 * i + 2  # right child
-		if (child <= len(self.__A)-1):
+		if (child <= len(self.__A)-1): # 얘도 까먹지마라
 			if (right <= len(self.__A)-1 and self.__A[child] < self.__A[right]):
 				child = right
 			if self.__A[i] < self.__A[child]:
@@ -44,7 +44,8 @@ class Heap:
 			self.__percolateDown(i)
 
 	def isEmpty(self) -> bool:
-		return len(self.__A) == 0
+		# return len(self.__A) == 0
+		return not bool(self.__A)
 
 	def clear(self):
 		self.__A = []
