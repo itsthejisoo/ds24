@@ -21,7 +21,7 @@ def gapSequence(n:int) -> list:
 	H.reverse()
 	return H
 
-def shellSort_1(A):
+'''def shellSort_1(A):
 	gap = 1
 	while gap < len(A) // 3:
 		gap = 3 * gap + 1
@@ -36,7 +36,7 @@ def shellSort_1(A):
 			A[loc] = newItem
 		gap //= 3
 	
-	return A
+	return A'''
 
 # def shellSort(arr):
 #     n = len(arr)
