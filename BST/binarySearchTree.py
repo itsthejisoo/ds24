@@ -3,6 +3,7 @@ class TreeNode:
         self.item = newItem
         self.left = left
         self.right = right
+        self.visited = False
 
 class BinarySearchTree:
     def __init__(self):
@@ -73,3 +74,27 @@ class BinarySearchTree:
 
     def clear(self):
         self.__root = self.NIL
+
+    def getRoot(self):
+        return self.__root
+
+    def preorder(self, r:TreeNode):
+        if r != None and r.visited == False:
+            print(r.item, end=" ")
+            r.visited = True
+            self.preorder(r.left)
+            self.preorder(r.right)
+
+    def inorder(self, r:TreeNode):
+        if r != None and r.visited == False:
+            self.inorder(r.left)
+            print(r.item, end=" ")
+            r.visited = True
+            self.inorder(r.right)
+
+    def postorder(self, r:TreeNode):
+        if r != None and r.visited == False:
+            self.postorder(r.left)
+            self.postorder(r.right)
+            print(r.item, end=" ")
+            r.visited = True
