@@ -86,7 +86,7 @@ def lfu_sim(cache_slots):
 				cache[lpn] += 1
 			else:
 				cache[lpn] = 1
-			newnode = LFU_Node(lpn, 1)
+			newnode = LFU_Node(lpn, cache[lpn])
 			newnode.point = tot_cnt				# 언제 들어왔는지
 			cache_heap.insert(newnode)
 		else:									# cache안에 lpn이 있을때(hit)
