@@ -77,6 +77,22 @@ class BinarySearchTree:
     def getRoot(self):
         return self.__root
 
+    def lca(self, a, b):
+        lca_item = self.__lca(self.__root, a, b)
+        print(lca_item.item)
+
+    def __lca(self, tNode:TreeNode, a, b):
+        if tNode == None or tNode.item == a or tNode.item == b:
+            return tNode
+        
+        left = self.__lca(tNode.left, a, b)
+        right = self.__lca(tNode.right, a, b)
+
+        if left and right:
+            return tNode
+        
+        return left if left is not None else right
+
     def preorder(self, r:TreeNode):
         if r != None:
             print(r.item, end=" ")
