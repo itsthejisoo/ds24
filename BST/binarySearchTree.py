@@ -88,10 +88,11 @@ class BinarySearchTree:
         left = self.__lca(tNode.left, a, b)
         right = self.__lca(tNode.right, a, b)
 
-        if left and right:
+        if left and right: # left와 right 모두 노드 값이 있을 경우
             return tNode
         
-        return left if left is not None else right
+        # left와 right 중에서 left만 노드를 찾은 경우 (left가 더 상위 노드라는 뜻), 반대로도 같은 상황
+        return left if left is not None else right 
 
     def preorder(self, r:TreeNode):
         if r != None:
