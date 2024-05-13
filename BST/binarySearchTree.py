@@ -94,18 +94,21 @@ class BinarySearchTree:
         # left와 right 중에서 left만 노드를 찾은 경우 (left가 더 상위 노드라는 뜻), 반대로도 같은 상황
         return left if left is not None else right 
 
+# 전위 순회 (루트 노드에서 가장 아래의 왼쪽 노드까지 다 탐색한 후에 오른쪽 노드 탐색)
     def preorder(self, r:TreeNode):
         if r != None:
             print(r.item, end=" ")
             self.preorder(r.left)
             self.preorder(r.right)
 
+# 중위 순회 (맨 밑에 자식 노드 -> 그의 부모 노드 -> 오른쪽 자식 노드 탐색하여 올라감. 후에 오른쪽 노드 탐색)
     def inorder(self, r:TreeNode):
         if r != None:
             self.inorder(r.left)
             print(r.item, end=" ")
             self.inorder(r.right)
 
+# 후위 순회 (맨 밑에 자식 노드부터 탐색하여 올라감)
     def postorder(self, r:TreeNode):
         if r != None:
             self.postorder(r.left)
