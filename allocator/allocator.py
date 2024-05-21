@@ -2,6 +2,7 @@ class Allocator:
     def __init__(self):
         self.chunk_size = 4096
         
+        
     def print_stats(self):
         print("Arena: XX MB")
         print("In-use: XX MB")
