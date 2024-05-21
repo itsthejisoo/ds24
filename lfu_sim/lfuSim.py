@@ -100,6 +100,3 @@ def lfu_sim(cache_slots):
 if __name__ == "__main__":
 	for cache_slots in range(100, 1000, 100):
 		lfu_sim(cache_slots)
-
-# 배열이 아니라 리스튼데 오버플로우가 될 수 있나?
-# 리스트는 배열이랑 다르게 크기 변환이 가능한걸로 알고 있는데? -> question
