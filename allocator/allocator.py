@@ -30,7 +30,6 @@ class Allocator:
 		if n != 0:
 			self.node_list(tNode.next, n)
 
-
 	def malloc(self, id, size):		# O(n)
 		# 할당해야할 청크 개수 구하고 해시 테이블 체인에 연결하기
 		chunk_num = (size // self.chunk_size) + 1
