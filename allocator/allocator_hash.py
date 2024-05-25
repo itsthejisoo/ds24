@@ -4,11 +4,11 @@ class Node:
 		self.next = None
 
 class Allocator:
-	def __init__(self, chunk_size=4096):
-		self.chunk_size = chunk_size
+	def __init__(self):
+		self.chunk_size = 4096
 		self.arena = [None] * 100000
 		self.in_use_size = 0	# 사용 중인 메모리 크기
-		self.ac_num = 0			# 아레나 안에 있는 청크 개수
+		self.ac_num = 0			# 아레나 안에 있는 청크 총 개수
 
 	def print_stats(self):
 		arena_size = self.ac_num * self.chunk_size
@@ -20,7 +20,7 @@ class Allocator:
 		print("Utilization: {:.3f}".format(utilization))
 	
 	# chunk 사이즈에 맞게 해시테이블 노드 할당하기
-	def node_list(self, id, size, tNode:Node, n:int):
+	def node_list(self, size, tNode:Node, n:int):
 		c_n = (size // self.chunk_size) + 1		# 청크 개수
 		if n == 1:
 			tNode.next = Node(size - c_n * self.chunk_size)
@@ -36,7 +36,7 @@ class Allocator:
 		self.ac_num += chunk_num
 		if chunk_num > 1:		# chunk 개수가 2개 이상일때는 청크 단위로 더 할당 받아야됨
 			new_node = Node(self.chunk_size)
-			self.node_list(id, size, new_node, chunk_num - 1)
+			self.node_list(size, new_node, chunk_num - 1)
 		else:	# chunk 개수가 한개일 때
 			new_node = Node(size)
 
