@@ -9,16 +9,17 @@ class Allocator:
         arena_size = self.ac_num * self.chunk_size
         utilization = self.in_use_size / arena_size if arena_size > 0 else 0
 
+		# MB단위이므로 1M 나누기
         print("Arena: ", arena_size // (1024 * 1024), "MB")
         print("In-use: ", self.in_use_size // (1024 * 1024), "MB")
         print("Utilization: {:.3f}".format(utilization))
 
-    def malloc(self, id, size):
+    def malloc(self, id, size):                     # 할당해야할 청크 개수 구하고 딕셔너리에 추가하기
         chunk_num = (size // self.chunk_size) + 1
         self.ac_num += chunk_num
         if chunk_num == 1:
             self.arena[id] = size
-        if chunk_num > 1:
+        if chunk_num > 1:                          # chunk 개수가 2개 이상일 경우 dictionary에 chunk 리스트를 저장한다.
             chunk_arr = [self.chunk_size] * (chunk_num - 1)
             chunk_arr.append(size - (self.chunk_size * (chunk_num - 1)))
             self.arena[id] = chunk_arr
@@ -29,10 +30,10 @@ class Allocator:
             print("free: No such ID in hash table")
             return
 
-        if isinstance(self.arena[id], list):
+        if isinstance(self.arena[id], list):        # self.arena[id]의 type가 list인지 확인하는 조건문 -> true: chunk가 2개 이상
             free_size = ((len(self.arena[id]) - 1) * 4096) + self.arena[id][len(self.arena[id]) - 1]
             self.in_use_size -= free_size
-        else:
+        else:                                       # chunk가 1개일 경우
             self.in_use_size -= self.arena[id]
 
         del self.arena[id]
