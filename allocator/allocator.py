@@ -21,7 +21,7 @@ class Allocator:
 	
 	# chunk 사이즈에 맞게 해시테이블 노드 할당하기
 	def node_list(self, id, size, tNode:Node, n:int):
-		c_n = (size // self.chunk_size) + 1
+		c_n = (size // self.chunk_size) + 1		# 청크 개수
 		if n == 1:
 			tNode.next = Node(size - c_n * self.chunk_size)
 		else:
@@ -34,15 +34,15 @@ class Allocator:
 		# 할당해야할 청크 개수 구하고 해시 테이블 체인에 연결하기
 		chunk_num = (size // self.chunk_size) + 1
 		self.ac_num += chunk_num
-		if chunk_num > 1:
+		if chunk_num > 1:		# chunk 개수가 2개 이상일때는 청크 단위로 더 할당 받아야됨
 			new_node = Node(self.chunk_size)
 			self.node_list(id, size, new_node, chunk_num - 1)
-		else:
+		else:	# chunk 개수가 한개일 때
 			new_node = Node(size)
 
-		if self.arena[id] is None:
+		if self.arena[id] is None:		# 메모리 안의 청크가 비어있을 때, 할당 가능
 			self.arena[id] = new_node
-		else:
+		else:							# 메모리 안의 청크가 이미 할당이 되어있는 경우, 비어있는 청크를 찾는다.
 			curr = self.arena[id]
 			while curr.next:
 				curr = curr.next
