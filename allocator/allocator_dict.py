@@ -18,11 +18,14 @@ class Allocator:
         chunk_num = (size // self.chunk_size) + 1
         self.ac_num += chunk_num
         if chunk_num == 1:
-            self.arena[id] = size
+            self.arena[id] = [size]
         if chunk_num > 1:                          # chunk 개수가 2개 이상일 경우 dictionary에 chunk 리스트를 저장한다.
-            chunk_arr = [self.chunk_size] * (chunk_num - 1)
-            chunk_arr.append(size - (self.chunk_size * (chunk_num - 1)))
-            self.arena[id] = chunk_arr
+            if id in self.arena:                    # arena에 이미 id가 존재하고 추가로 chunk 할당할 경우
+                self.arena.append(size - (self.chunk_size * (chunk_num - 1)))
+            else:
+                chunk_arr = [self.chunk_size] * (chunk_num - 1)
+                chunk_arr.append(size - (self.chunk_size * (chunk_num - 1)))
+                self.arena[id] = chunk_arr
         self.in_use_size += size
     
     def free(self, id):
@@ -34,7 +37,7 @@ class Allocator:
             free_size = ((len(self.arena[id]) - 1) * 4096) + self.arena[id][len(self.arena[id]) - 1]
             self.in_use_size -= free_size
         else:                                       # chunk가 1개일 경우
-            self.in_use_size -= self.arena[id]
+            self.in_use_size -= self.arena[id][0]
 
         del self.arena[id]
 
