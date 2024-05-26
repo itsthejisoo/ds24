@@ -17,12 +17,17 @@ class Allocator:
     def malloc(self, id, size):                     # 할당해야할 청크 개수 구하고 딕셔너리에 추가하기
         chunk_num = (size // self.chunk_size) + 1
         self.ac_num += chunk_num
-        if chunk_num == 1:
-            self.arena[id] = [size]
-        if chunk_num > 1:                          # chunk 개수가 2개 이상일 경우 dictionary에 chunk 리스트를 저장한다.
-            if id in self.arena:                    # arena에 이미 id가 존재하고 추가로 chunk 할당할 경우
-                self.arena.append(size - (self.chunk_size * (chunk_num - 1)))
-            else:
+        if id in self.arena:                # arena에 이미 id가 존재하고 추가로 chunk 할당할 경우
+            if chunk_num == 1:
+                self.arena[id].append(size)
+            if chunk_num > 1:                          # chunk 개수가 2개 이상일 경우 dictionary에 chunk 리스트를 저장한다.
+                chunk_arr = [self.chunk_size] * (chunk_num - 1)
+                chunk_arr.append(size - (self.chunk_size * (chunk_num - 1)))
+                self.arena[id].extend(chunk_arr)
+        else:                               # 새로운 id에 메모리 할당할 경우
+            if chunk_num == 1:
+                self.arena[id] = [size]
+            if chunk_num > 1:                          # chunk 개수가 2개 이상일 경우 dictionary에 chunk 리스트를 저장한다.
                 chunk_arr = [self.chunk_size] * (chunk_num - 1)
                 chunk_arr.append(size - (self.chunk_size * (chunk_num - 1)))
                 self.arena[id] = chunk_arr
