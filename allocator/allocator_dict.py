@@ -10,9 +10,9 @@ class Allocator:
         utilization = self.in_use_size / arena_size if arena_size > 0 else 0
 
 		# MB단위이므로 1M 나누기
-        print("Arena: ", arena_size // (1024 * 1024), "MB")
-        print("In-use: ", self.in_use_size // (1024 * 1024), "MB")
-        print("Utilization: {:.3f}".format(utilization))
+        print("Arena: ", arena_size // (1024 * 1024), "MB")     # 유효숫자 맞춰주기 위해서 '//' 사용함. 실제로 390.71875... 나옴
+        print("In-use: ", self.in_use_size // (1024 * 1024), "MB")      # 이하 동문. 실제로 162.18604...나옴
+        print("Utilization: {:.3f}".format(utilization))    # 유효숫자 맞추기 위해 3번째 소수점까지
 
     def malloc(self, id, size):                     # 할당해야할 청크 개수 구하고 딕셔너리에 추가하기
         chunk_num = (size // self.chunk_size) + 1
