@@ -24,8 +24,12 @@ class Allocator:
 			self.ac_num += chunk_num
 			self.free_space = 0
 
-		self.arena[id] = (size, chunk_num)
-		self.in_use_size += size
+		if id not in self.arena:		# arena에 id값인 메모리가 처음으로 할당하는 경우
+			self.arena[id] = (size, chunk_num)
+			self.in_use_size += size
+		else:								# arena에 id값인 메모리가 이미 할당 되어 있는 경우
+			self.arena[id][0] += size
+			self.arena[id][1] += chunk_num
 
 	def free(self, id):
 		if id in self.arena:
