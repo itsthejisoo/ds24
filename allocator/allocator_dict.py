@@ -7,7 +7,7 @@ class Allocator:
         
     def print_stats(self):
         arena_size = self.ac_num * self.chunk_size
-        utilization = self.in_use_size / arena_size if arena_size > 0 else 0
+        utilization = self.in_use_size / arena_size
 
 		# MB단위이므로 1M 나누기
         print("Arena: ", arena_size // (1024 * 1024), "MB")     # 유효숫자 맞춰주기 위해서 '//' 사용함. 실제로 390.71875... 나옴
@@ -41,8 +41,10 @@ class Allocator:
         if isinstance(self.arena[id], list):        # self.arena[id]의 type가 list인지 확인하는 조건문 -> true: chunk가 2개 이상
             free_size = ((len(self.arena[id]) - 1) * 4096) + self.arena[id][len(self.arena[id]) - 1]
             self.in_use_size -= free_size
+            self.ac_num -= len(self.arena[id])
         else:                                       # chunk가 1개일 경우
             self.in_use_size -= self.arena[id][0]
+            self.ac_num -= 1
 
         del self.arena[id]
 
