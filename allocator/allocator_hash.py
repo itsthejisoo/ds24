@@ -12,7 +12,7 @@ class Allocator:
 
 	def print_stats(self):
 		arena_size = self.ac_num * self.chunk_size
-		utilization = self.in_use_size / arena_size if arena_size > 0 else 0
+		utilization = self.in_use_size / arena_size
 
 		# MB단위이므로 1M 나누기
 		print("Arena: ", arena_size // (1024 * 1024), "MB")
