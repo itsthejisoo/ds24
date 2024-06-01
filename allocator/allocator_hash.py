@@ -9,11 +9,11 @@ class Allocator:
         self.arena = [None] * 1024 * 1024
         self.in_use_size = 0  # 사용 중인 메모리 크기
         self.ac_num = 0  # 아레나 안에 있는 청크 총 개수
-        self.free_chunks = 0  # 사용 가능한 free space 청크 개수
+        self.free_space = 0  # 사용 가능한 free space 청크 개수
 
     def print_stats(self):
         arena_size = self.ac_num * self.chunk_size
-        utilization = self.in_use_size / arena_size if arena_size > 0 else 0
+        utilization = self.in_use_size / arena_size
 
         # MB 단위로 변환하여 출력
         print("Arena: ", arena_size // (1024 * 1024), "MB")
@@ -36,12 +36,12 @@ class Allocator:
         chunk_num = (size // self.chunk_size) + 1
 
         # Free space에서 필요한 청크를 할당
-        if self.free_chunks >= chunk_num:
-            self.free_chunks -= chunk_num  # free space에서 청크를 가져옴
+        if self.free_space >= chunk_num:
+            self.free_space -= chunk_num  # free space에서 청크를 가져옴
         else:
-            new_chunks = chunk_num - self.free_chunks
+            new_chunks = chunk_num - self.free_space
             self.ac_num += new_chunks  # 부족한 만큼 새로운 청크 추가
-            self.free_chunks = 0
+            self.free_space = 0
 
         if chunk_num > 1:  # chunk 개수가 2개 이상일 때
             new_node = Node(self.chunk_size)
@@ -51,7 +51,7 @@ class Allocator:
 
         if self.arena[id] is None:  # 메모리 안의 청크가 비어있을 때
             self.arena[id] = new_node
-        else:  # 메모리 안의 청크가 이미 할당된 경우, 끝에 연결
+        else:  # 메모리 안의 청크가 이미 할당된 경우, 끝에 연결 // input.txt한에선 이런 경우는 없음 -> O(1)
             curr = self.arena[id]
             while curr.next:
                 curr = curr.next
@@ -72,7 +72,7 @@ class Allocator:
             chunk_count += 1
             curr = curr.next
 
-        self.free_chunks += chunk_count  # free space에 청크 추가
+        self.free_space += chunk_count  # free space에 청크 추가
         self.arena[id] = None  # 해당 ID의 청크 모두 삭제
 
 if __name__ == "__main__":
