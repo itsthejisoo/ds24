@@ -7,7 +7,7 @@ class Allocator:
 		self.in_use_size = 0     # 사용 중인 메모리 크기
 
 	def print_stats(self):
-		arena_size = len(self.arena) * self.chunk_size
+		arena_size = self.ac_num * self.chunk_size
 		utilization = self.in_use_size / arena_size if arena_size > 0 else 0
 
 		print("Arena: ", arena_size // (1024 * 1024), "MB")
@@ -29,7 +29,7 @@ class Allocator:
 
 	def free(self, id):
 		if id in self.arena:
-			size, chunk_num = self.arena.pop(id)
+			size, chunk_num = self.arena[id]
 			self.free_space += chunk_num
 			self.in_use_size -= size
 		else:
