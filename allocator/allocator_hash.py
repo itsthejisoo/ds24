@@ -61,6 +61,7 @@ class Allocator:
 		while curr:
 			self.in_use_size -= curr.size
 			curr = curr.next
+			self.ac_num -= 1
 
         # 해당 ID의 청크 모두 삭제
 		self.arena[id] = None
