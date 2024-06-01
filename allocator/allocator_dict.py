@@ -34,6 +34,7 @@ class Allocator:
 	def free(self, id):
 		if id in self.arena:
 			size, chunk_num = self.arena[id]
+			self.arena[id] = (None, None)
 			self.free_space += chunk_num
 			self.in_use_size -= size
 		else:
