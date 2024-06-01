@@ -2,9 +2,9 @@ class Allocator:
 	def __init__(self):
 		self.chunk_size = 4096
 		self.arena = {}
-		self.in_use_size = 0  # 사용 중인 메모리 크기
-		self.ac_num = 0  # arena 안에 있는 청크 총 개수
-		self.free_chunks = 0  # 사용 가능한 free space 청크 개수
+		self.in_use_size = 0	 # 사용 중인 메모리 크기
+		self.ac_num = 0			# arena 안에 있는 청크 총 개수
+		self.free_chunks = 0	 # 사용 가능한 free space 청크 개수
 
 	def print_stats(self):
 		arena_size = self.ac_num * self.chunk_size
@@ -21,9 +21,9 @@ class Allocator:
 		allocated_chunks = []
 		remaining_size = size
 
-		if self.free_chunks >= chunk_num:
+		if self.free_chunks >= chunk_num:	# free 청크가 충분한 경우
 			self.free_chunks -= chunk_num
-		else:
+		else:								# free 청크가 충분하지 않은 경우
 			chunk_num -= self.free_chunks
 			self.free_chunks = 0
 			self.ac_num += chunk_num
