@@ -1,8 +1,8 @@
 class Allocator:
 	def __init__(self):
 		self.chunk_size = 4096
-		self.arena = []          # chunk를 저장하는 리스트
-		self.allocated = {}      # 할당된 메모리를 관리하는 딕셔너리
+		self.arena = {}          # chunk를 저장하는 리스트
+		self.ac_num = 0  		 # 아레나 안에 있는 청크 총 개수
 		self.free_space = 0      # free한 chunk 개수
 		self.in_use_size = 0     # 사용 중인 메모리 크기
 
@@ -17,23 +17,23 @@ class Allocator:
 	def malloc(self, id, size):
 		chunk_num = (size + self.chunk_size - 1) // self.chunk_size
 
-		if self.free_space >= chunk_num:  # free 청크가 충분한 경우
+		if self.free_space >= chunk_num:  	# free 청크가 충분한 경우
 			self.free_space -= chunk_num
-		else:  # free 청크가 충분하지 않은 경우
-			for _ in range(chunk_num - self.free_space):
-				self.arena.append([None] * self.chunk_size)
+		else:  								# free 청크가 충분하지 않은 경우
+			chunk_num -= self.free_space
+			self.ac_num += chunk_num
 			self.free_space = 0
 
-		self.allocated[id] = (size, chunk_num)
+		self.arena[id] = (size, chunk_num)
 		self.in_use_size += size
 
 	def free(self, id):
-		if id in self.allocated:
-			size, chunk_num = self.allocated.pop(id)
+		if id in self.arena:
+			size, chunk_num = self.arena.pop(id)
 			self.free_space += chunk_num
 			self.in_use_size -= size
 		else:
-			print("free: No such ID in allocated list")
+			print("free: No such ID in arena list")
 			return
 
 if __name__ == "__main__":
