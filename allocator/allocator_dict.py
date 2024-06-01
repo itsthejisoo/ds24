@@ -8,7 +8,7 @@ class Allocator:
 
 	def print_stats(self):
 		arena_size = self.ac_num * self.chunk_size
-		utilization = self.in_use_size / arena_size if arena_size > 0 else 0
+		utilization = self.in_use_size / arena_size
 
 		print("Arena: ", arena_size // (1024 * 1024), "MB")  		# 유효숫자 맞춰주기 위해서 '//' 사용함. 실제로 390.71875... 나옴
 		print("In-use: ", self.in_use_size // (1024 * 1024), "MB")  # 이하 동문. 실제로 162.18604...나옴
