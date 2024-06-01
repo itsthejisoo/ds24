@@ -1,7 +1,7 @@
 class Allocator:
     def __init__(self):
         self.chunk_size = 4096
-        self.arena = dict()
+        self.arena = {}
         self.in_use_size = 0	# 사용 중인 메모리 크기
         self.ac_num = 0	        # arena 안에 있는 청크 총 개수
         
