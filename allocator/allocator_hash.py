@@ -8,11 +8,11 @@ class Allocator:
 		self.chunk_size = 4096
 		self.arena = [None] * 1024 * 1024
 		self.in_use_size = 0  # 사용 중인 메모리 크기
-		self.ac_num = 0  # 아레나 안에 있는 청크 총 개수
+		self.arean_chunk_num = 0  # 아레나 안에 있는 청크 총 개수
 		self.free_space = 0  # 사용 가능한 free space 청크 개수
 
 	def print_stats(self):
-		arena_size = self.ac_num * self.chunk_size
+		arena_size = self.arean_chunk_num * self.chunk_size
 		utilization = self.in_use_size / arena_size
 
 		# MB 단위로 변환하여 출력
@@ -40,7 +40,7 @@ class Allocator:
 			self.free_space -= chunk_num  # free space에서 청크를 가져옴
 		else:
 			new_chunks = chunk_num - self.free_space
-			self.ac_num += new_chunks  # 부족한 만큼 새로운 청크 추가
+			self.arean_chunk_num += new_chunks  # 부족한 만큼 새로운 청크 추가
 			self.free_space = 0
 
 		if chunk_num > 1:  # chunk 개수가 2개 이상일 때
