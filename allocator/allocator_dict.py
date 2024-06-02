@@ -2,12 +2,12 @@ class Allocator:
 	def __init__(self):
 		self.chunk_size = 4096
 		self.arena = {}
-		self.in_use_size = 0	 # 사용 중인 메모리 크기
-		self.ac_num = 0			# arena 안에 있는 청크 총 개수
-		self.free_space = 0	 # 사용 가능한 free space 청크 개수
+		self.in_use_size = 0	 			# 사용 중인 메모리 크기
+		self.arena_chunk_num = 0			# arena 안에 있는 청크 총 개수 (arena 안에 있는 value를 sum 해서 계산해도 되지만 순회를 하게 되면 시간 복잡도가 떨어지기 떄문에 따로 추적하게 했음)
+		self.free_space = 0					# 사용 가능한 free space 청크 개수
 
 	def print_stats(self):
-		arena_size = self.ac_num * self.chunk_size
+		arena_size = self.arena_chunk_num * self.chunk_size
 		utilization = self.in_use_size / arena_size
 
 		print("Arena: ", arena_size // (1024 * 1024), "MB")  		# 유효숫자 맞춰주기 위해서 '//' 사용함. 실제로 390.71875... 나옴
@@ -21,7 +21,7 @@ class Allocator:
 			self.free_space -= chunk_num
 		else:  								# free 청크가 충분하지 않은 경우
 			chunk_num -= self.free_space
-			self.ac_num += chunk_num
+			self.arena_chunk_num += chunk_num
 			self.free_space = 0
 
 		if id not in self.arena:		# arena에 id값인 메모리가 처음으로 할당하는 경우
