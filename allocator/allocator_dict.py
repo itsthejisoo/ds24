@@ -1,3 +1,5 @@
+'''잘못 짰음ㅠ'''
+'''
 class Allocator:
 	def __init__(self):
 		self.chunk_size = 4096
@@ -59,3 +61,4 @@ if __name__ == "__main__":
 			n += 1
 
 	allocator.print_stats()
+'''
