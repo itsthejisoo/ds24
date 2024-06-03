@@ -55,7 +55,7 @@ class Allocator:
 		self.in_use_size += size  # 사용 중인 메모리 크기 업데이트
 
 	def free(self, id):  # O(n)
-		if self.arena[id] is None:
+		if self.arena[id] is None:				# table에 id가 없을 때
 			print("free: No such ID in hash table")
 			return
 
