@@ -1,3 +1,5 @@
+'''잘못 짰음ㅠ'''
+'''
 class Node:
 	def __init__(self, size):
 		self.size = size
@@ -93,3 +95,4 @@ if __name__ == "__main__":
 			n += 1
 
 	allocator.print_stats()
+'''
