@@ -45,6 +45,7 @@ class Allocator:
 
 	def merge(self):		# 연속된 free space merge
 		merged_list = []
+        ## 이거 안됨.. 코드 고쳐야됨.. 바보 gpt도 못 고쳐줌ㅠ
 		for start, size in sorted(self.free_space):        # 시작 포인터를 기준으로 정렬된 free_space 리스트를 사용
 			if merged_list and merged_list[-1][0] + merged_list[-1][1] == start:
 				merged_list[-1] = (merged_list[-1][0], merged_list[-1][1] + size)
