@@ -23,9 +23,6 @@ class Allocator:
 		while numpowerof2 < size:
 			numpowerof2 *= 2
 		
-		if numpowerof2 > self.chunk_size:
-			print("malloc: request size is bigger than chunk size")
-		
 		# 사용 가능한 청크를 찾음
 		if numpowerof2 in self.free_space and self.free_space[numpowerof2]:
 			address = self.free_space[numpowerof2].pop()
